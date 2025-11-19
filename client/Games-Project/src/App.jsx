@@ -1,7 +1,9 @@
+import Catalog from "./components/catalog";
+
 function App() {
   return (
     <>
-      <h1>hello</h1>
+      <Catalog />
     </>
   );
 }

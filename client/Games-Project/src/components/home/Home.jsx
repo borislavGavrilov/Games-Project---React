@@ -1,6 +1,23 @@
+import { use, useEffect, useState } from "react";
 import { Link } from "react-router";
+import Game from "../game/Game";
 
 export default function Home(props) {
+  const [games, setGames] = useState([]);
+  const [last3Games, setLast3Games] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:3030/jsonstore/games")
+      .then((response) => response.json())
+      .then((data) => setGames(Object.values(data)))
+      .catch((error) => console.error("Error fetching games:", error));
+  }, []);
+
+  useEffect(() => {
+    const sortedGames = [...games].sort((a, b) => b._createdOn - a._createdOn);
+    setLast3Games(sortedGames.slice(0, 3));
+  }, [games]);
+
   return (
     <>
       {/* Home Page */}
@@ -17,39 +34,15 @@ export default function Home(props) {
           <div id="latest-wrap">
             {/* Display div: with information about every game (if any) */}
             <div className="home-container">
-              <div className="game">
-                <img src="./images/witcher.png" alt="The Witcher 3" />
-                <div className="details-overlay">
-                  <p className="name">The Witcher 3</p>
-                  <p className="genre">Open World</p>
-                  <Link to="/details/witcher" className="details-button">
-                    Details
-                  </Link>
+              {last3Games.length > 0 ? (
+                <div className="catalog-container">
+                  {last3Games.map((game) => (
+                    <Game key={game?._id} {...game} />
+                  ))}
                 </div>
-              </div>
-
-              <div className="game">
-                <img src="./images/elden ring.png" alt="Elden Ring" />
-                <div className="details-overlay">
-                  <p className="name">Elden Ring</p>
-                  <p className="genre">Action RPG</p>
-                  <Link to="/details/elden-ring" className="details-button">
-                    Details
-                  </Link>
-                </div>
-              </div>
-
-              <div className="game">
-                <img src="./images/minecraft.png" alt="Minecraft" />
-                <div className="details-overlay">
-                  <p className="name">Minecraft</p>
-                  <p className="genre">Sandbox</p>
-                  <Link to="/details/minecraft" className="details-button">
-                    Details
-                  </Link>
-                </div>
-              </div>
-
+              ) : (
+                <h3 className="no-articles">No Added Games Yet</h3>
+              )}
               {/* Display paragraph: If there are no games */}
               {/* <p className="no-articles">No games yet</p> */}
             </div>

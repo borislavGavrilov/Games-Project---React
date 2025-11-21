@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
 export default function Details(props) {
   const { gameId } = useParams();
   const gameIdFromParams = gameId;
   const [game, setGame] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch(`http://localhost:3030/jsonstore/games/${gameIdFromParams}`)
@@ -12,6 +13,13 @@ export default function Details(props) {
       .then((data) => setGame(data))
       .catch((error) => console.error("Error fetching game details:", error));
   }, [gameIdFromParams]);
+
+  const deleteGame = () => {
+    fetch(`http://localhost:3030/jsonstore/games/${gameIdFromParams}`, {
+      method: "DELETE",
+    });
+    navigate("/");
+  };
 
   return (
     <>
@@ -45,9 +53,13 @@ export default function Details(props) {
             <a href="#" className="button">
               Edit
             </a>
-            <a href="#" className="button">
+            {/* <a href="#" className="button">
               Delete
-            </a>
+            </a> */}
+
+            <button className="button" onClick={deleteGame}>
+              Delete
+            </button>
           </div>
           <div className="details-comments">
             <h2>Comments:</h2>

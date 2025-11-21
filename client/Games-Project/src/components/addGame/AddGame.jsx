@@ -1,29 +1,30 @@
-export default function Create(props) {
+import { useNavigate } from "react-router";
+
+export default function AddGame(props) {
+  const navigate = useNavigate();
+  async function createGame(params) {
+    params.preventDefault();
+    const formData = new FormData(params.target);
+    const data = Object.fromEntries(formData);
+
+    data.players = Number(data.players);
+    data._createdOn = new Date();
+
+    const result = await fetch("http://localhost:3030/jsonstore/games", {
+      method: "POST",
+      headers: { "content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    const response = await result.json();
+    navigate("/catalog");
+  }
+
   return (
     <>
-      <header>
-        {/* Navigation */}
-        <nav>
-          <a className="home" href="#">
-            {" "}
-            <img src="./images/logo.png" alt="logo" />{" "}
-          </a>
-          <a href="#">Catalog</a>
-          {/* Logged-in users */}
-          <div id="user">
-            <a href="#">Add Game</a>
-            <a href="#">Logout</a>
-          </div>
-          {/* Guest users */}
-          <div id="guest">
-            <a href="#">Login</a>
-            <a href="#">Register</a>
-          </div>
-        </nav>
-      </header>
       {/* add Page ( Only for logged-in users ) */}
       <section id="add-page">
-        <form id="add-new-game">
+        <form id="add-new-game" onSubmit={createGame}>
           <div className="container">
             <h1>Add New Game</h1>
             <div className="form-group-half">
@@ -31,7 +32,7 @@ export default function Create(props) {
               <input
                 type="text"
                 id="gameName"
-                name="gameName"
+                name="title"
                 placeholder="Enter game title..."
               />
             </div>
@@ -49,14 +50,14 @@ export default function Create(props) {
               <input
                 type="number"
                 id="activePlayers"
-                name="activePlayers"
+                name="players"
                 min={0}
                 placeholder={0}
               />
             </div>
             <div className="form-group-half">
               <label htmlFor="releaseDate">Release Date:</label>
-              <input type="date" id="releaseDate" name="releaseDate" />
+              <input type="date" id="Date" name="releaseDate" />
             </div>
             <div className="form-group-full">
               <label htmlFor="imageUrl">Image URL:</label>
@@ -85,9 +86,6 @@ export default function Create(props) {
           </div>
         </form>
       </section>
-      <footer>
-        <p className="center-text">React Course Exercise @ SoftUni ™</p>
-      </footer>
     </>
   );
 }

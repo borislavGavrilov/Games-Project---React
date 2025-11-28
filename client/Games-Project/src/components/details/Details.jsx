@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import { use, useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router";
 
-export default function Details(props) {
+export default function Details({ user }) {
   const { gameId } = useParams();
   const gameIdFromParams = gameId;
   const [game, setGame] = useState([]);
@@ -49,18 +49,20 @@ export default function Details(props) {
             </div>
           </div>
           {/* Edit/Delete buttons ( Only for creator of this game )  */}
-          <div className="buttons">
-            <a href="#" className="button">
-              Edit
-            </a>
-            {/* <a href="#" className="button">
-              Delete
-            </a> */}
+          {user ? (
+            <div className="buttons">
+              <Link to={`/catalog/${gameId}/edit`} className="button">
+                Edit
+              </Link>
 
-            <button className="button" onClick={deleteGame}>
-              Delete
-            </button>
-          </div>
+              <button className="button" onClick={deleteGame}>
+                Delete
+              </button>
+            </div>
+          ) : (
+            ""
+          )}
+
           <div className="details-comments">
             <h2>Comments:</h2>
             <ul>
@@ -82,21 +84,25 @@ export default function Details(props) {
           </div>
         </div>
         {/* Add Comment ( Only for logged-in users, which is not creators of the current game ) */}
-        <article className="create-comment">
-          <label>Add new comment:</label>
-          <form className="form">
-            <textarea
-              name="comment"
-              placeholder="Comment......"
-              defaultValue={""}
-            />
-            <input
-              className="btn submit"
-              type="submit"
-              defaultValue="Add Comment"
-            />
-          </form>
-        </article>
+        {user ? (
+          <article className="create-comment">
+            <label>Add new comment:</label>
+            <form className="form">
+              <textarea
+                name="comment"
+                placeholder="Comment......"
+                defaultValue={""}
+              />
+              <input
+                className="btn submit"
+                type="submit"
+                defaultValue="Add Comment"
+              />
+            </form>
+          </article>
+        ) : (
+          ""
+        )}
       </section>
     </>
   );

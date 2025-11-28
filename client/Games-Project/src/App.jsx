@@ -9,6 +9,7 @@ import Register from "./components/register/Register";
 import Login from "./components/login/Login";
 import Logout from "./components/logout/Logout";
 import { useState } from "react";
+import Edit from "./components/edit/Edit";
 
 function App() {
   const [registerUsers, setRegisterUsers] = useState([]);
@@ -50,7 +51,11 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/catalog" element={<Catalog />} />
-          <Route path="/catalog/:gameId/details" element={<Details />} />
+          <Route
+            path="/catalog/:gameId/details"
+            element={<Details user={loggedUser} />}
+          />
+          <Route path="/catalog/:gameId/edit" element={<Edit />} />
           <Route path="/add-game" element={<AddGame />} />
           <Route
             path="/register"

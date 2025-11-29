@@ -1,11 +1,13 @@
 import { use, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
-import Coments from "./coments/Coments";
+import Coments from "./coments/ComentsCreate";
+import ShowComents from "./coments/ShowComents";
 
 export default function Details({ user }) {
   const { gameId } = useParams();
   const gameIdFromParams = gameId;
   const [game, setGame] = useState([]);
+  const [refresh, setRefresh] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -20,6 +22,10 @@ export default function Details({ user }) {
       method: "DELETE",
     });
     navigate("/");
+  };
+
+  const comentRefresh = () => {
+    setRefresh((state) => !state);
   };
 
   return (
@@ -64,28 +70,9 @@ export default function Details({ user }) {
             ""
           )}
 
-          <div className="details-comments">
-            <h2>Comments:</h2>
-            <ul>
-              <li className="comment">
-                <p>
-                  Content: A masterpiece of world design, though the boss fights
-                  are brutal.
-                </p>
-              </li>
-              <li className="comment">
-                <p>
-                  Content: Truly feels like a next-gen evolution of the Souls
-                  formula!
-                </p>
-              </li>
-            </ul>
-            {/* Display paragraph: If there are no games in the database */}
-            {/* <p class="no-comment">No comments.</p> */}
-          </div>
+          <ShowComents refresh={comentRefresh} />
         </div>
-        {/* Add Comment ( Only for logged-in users, which is not creators of the current game ) */}
-        {user ? <Coments /> : ""}
+        {user ? <Coments user={user} refresh={comentRefresh} /> : ""}
       </section>
     </>
   );

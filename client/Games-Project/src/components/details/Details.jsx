@@ -1,5 +1,6 @@
 import { use, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
+import Coments from "./coments/Coments";
 
 export default function Details({ user }) {
   const { gameId } = useParams();
@@ -84,25 +85,7 @@ export default function Details({ user }) {
           </div>
         </div>
         {/* Add Comment ( Only for logged-in users, which is not creators of the current game ) */}
-        {user ? (
-          <article className="create-comment">
-            <label>Add new comment:</label>
-            <form className="form">
-              <textarea
-                name="comment"
-                placeholder="Comment......"
-                defaultValue={""}
-              />
-              <input
-                className="btn submit"
-                type="submit"
-                defaultValue="Add Comment"
-              />
-            </form>
-          </article>
-        ) : (
-          ""
-        )}
+        {user ? <Coments /> : ""}
       </section>
     </>
   );
